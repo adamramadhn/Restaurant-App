@@ -1,6 +1,8 @@
 # restaurant_app_api
 
-A new Flutter project.
+State management => [GetX](https://pub.dev/packages/get)
+Rest API => [Dio](https://pub.dev/packages/dio)
+
 
 ## Getting Started
 
