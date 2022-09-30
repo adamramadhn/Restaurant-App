@@ -10,28 +10,35 @@ class SearchController extends GetxController {
   SearchResponse get listResto => _listResto;
   String _message = '';
   String get message => _message;
-  late ResultState _state;
+  ResultState _state = ResultState.loading;
   ResultState get stateData => _state;
+  changeState(ResultState state) {
+    _state = state;
+    update();
+  }
 
   Future searchResto(query) async {
     try {
       final data = {'q': query};
-      _state = ResultState.loading;
-      update();
       final dataResto = await ApiService().searchRestaurant(data);
       if (dataResto.restaurants!.isEmpty) {
-        _state = ResultState.noData;
-        update();
+        changeState(ResultState.noData);
         return _message = 'Empty Data';
       } else {
-        _state = ResultState.hasData;
-        update();
+        changeState(ResultState.hasData);
         return _listResto = dataResto;
       }
-    } on DioError {
-      _state = ResultState.error;
-      update();
-      return _message = 'Periksa Internet Anda..';
+    } on DioError catch (e) {
+      if (e.type == DioErrorType.sendTimeout) {
+        changeState(ResultState.error);
+        return _message = 'Request Time Out';
+      } else {
+        changeState(ResultState.error);
+        return _message = 'Periksa internet anda..';
+      }
+    } catch (e) {
+      changeState(ResultState.error);
+      return _message = 'other error -> $e';
     }
   }
 }

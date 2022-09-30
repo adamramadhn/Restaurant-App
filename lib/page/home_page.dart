@@ -178,36 +178,75 @@ class MySearch extends SearchDelegate {
         },
       );
   @override
-  Widget buildResults(BuildContext context) => const Center(
-        child: Text(''),
+  Widget buildResults(BuildContext context) => GetBuilder<SearchController>(
+        init: SearchController(),
+        builder: (data) {
+          data.searchResto(query);
+          final listData = data.listResto;
+          if (data.stateData == ResultState.error) {
+            return Center(
+              child: Text(data.message),
+            );
+          } else if (data.stateData == ResultState.loading) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (data.stateData == ResultState.noData) {
+            return Center(
+              child: Text(data.message),
+            );
+          } else if (data.stateData == ResultState.hasData) {
+            return ListView.builder(
+              itemCount: listData.founded,
+              itemBuilder: (context, index) {
+                final suggestion = listData.restaurants?[index];
+                return ListTile(
+                  title: Text(suggestion?.name ?? ''),
+                  onTap: () {
+                    Get.to(
+                      () => DetailPage(
+                        id: suggestion?.id ?? '',
+                      ),
+                    );
+                  },
+                );
+              },
+            );
+          } else {
+            return Center(
+              child: Text(data.message),
+            );
+          }
+        },
       );
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return GetBuilder<SearchController>(
-      init: SearchController(),
-      builder: (data) {
-        data.searchResto(query);
-        final listData = data.listResto;
-        return ListView.builder(
-            itemCount: listData.founded,
-            itemBuilder: (context, index) {
-              final suggestion = listData.restaurants?[index];
-              return ListTile(
-                title: Text(suggestion?.name ?? ''),
-                onTap: () {
-                  // query = suggestion?.name ?? '';
-                  // showResults(context);
-                  // query = suggestion?.id ?? '';
-                  Get.to(
-                    () => DetailPage(
-                      id: suggestion?.id ?? '',
-                    ),
-                  );
-                },
-              );
-            });
-      },
-    );
+    return const Text('');
+    // GetBuilder<SearchController>(
+    //   init: SearchController(),
+    //   builder: (data) {
+    //     data.searchResto(query);
+    //     final listData = data.listResto;
+    //     return ListView.builder(
+    //         itemCount: listData.founded,
+    //         itemBuilder: (context, index) {
+    //           final suggestion = listData.restaurants?[index];
+    //           return ListTile(
+    //             title: Text(suggestion?.name ?? ''),
+    //             onTap: () {
+    //               // query = suggestion?.name ?? '';
+    //               // showResults(context);
+    //               // query = suggestion?.id ?? '';
+    //               Get.to(
+    //                 () => DetailPage(
+    //                   id: suggestion?.id ?? '',
+    //                 ),
+    //               );
+    //             },
+    //           );
+    //         });
+    //   },
+    // );
   }
 }
