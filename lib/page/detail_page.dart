@@ -60,8 +60,7 @@ class DetailPage extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(
-                              flex: 2,
+                            FittedBox(
                               child: Text(
                                 dataResto.restaurant?.name ?? 'something wrong',
                                 style: const TextStyle(
@@ -71,8 +70,7 @@ class DetailPage extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            Expanded(
-                              flex: 1,
+                            FittedBox(
                               child: TextButton(
                                 onPressed: () {
                                   late TextEditingController txtName;
@@ -81,118 +79,150 @@ class DetailPage extends StatelessWidget {
                                   txtName = TextEditingController();
                                   txtReview = TextEditingController();
                                   Get.bottomSheet(
-                                    Container(
-                                      height: Get.height * 0.5,
-                                      decoration: const BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(16),
-                                          topRight: Radius.circular(16),
+                                    SingleChildScrollView(
+                                      child: Container(
+                                        height: Get.height * 0.3,
+                                        decoration: const BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(16),
+                                            topRight: Radius.circular(16),
+                                          ),
                                         ),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(10.0),
-                                        child: Form(
-                                          key: formLogin,
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              TextFormField(
-                                                validator: (value) {
-                                                  if (value == null ||
-                                                      value.isEmpty) {
-                                                    return 'this field must be filled!';
-                                                  }
-                                                  return null;
-                                                },
-                                                controller: txtName,
-                                                decoration:
-                                                    const InputDecoration(
-                                                        hintText:
-                                                            'Input your name..'),
-                                              ),
-                                              const SizedBox(
-                                                height: 5,
-                                              ),
-                                              TextFormField(
-                                                validator: (value) {
-                                                  if (value == null ||
-                                                      value.isEmpty) {
-                                                    return 'this field must be filled!';
-                                                  }
-                                                  return null;
-                                                },
-                                                controller: txtReview,
-                                                decoration:
-                                                    const InputDecoration(
-                                                        hintText:
-                                                            'Your review..'),
-                                              ),
-                                              ElevatedButton(
-                                                onPressed: () async {
-                                                  final revC = Get.put(
-                                                      ReviewController());
-                                                  final isValidForm = formLogin
-                                                      .currentState!
-                                                      .validate();
-                                                  if (isValidForm) {
-                                                    revC
-                                                        .revResto(
-                                                            dataResto.restaurant
-                                                                    ?.id ??
-                                                                '',
-                                                            txtName.text,
-                                                            txtReview.text)
-                                                        .then(
-                                                      (value) {
-                                                        data.searchResto(id);
-                                                        Get.back();
-                                                        Get.snackbar('Yeay!',
-                                                            'Berhasil mereview restoran!',
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Form(
+                                            key: formLogin,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Expanded(
+                                                  flex: 3,
+                                                  child: TextFormField(
+                                                    validator: (value) {
+                                                      if (value == null ||
+                                                          value.isEmpty) {
+                                                        return 'this field must be filled!';
+                                                      }
+                                                      return null;
+                                                    },
+                                                    controller: txtName,
+                                                    decoration:
+                                                        const InputDecoration(
+                                                            hintText:
+                                                                'Input your name..'),
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Expanded(
+                                                  flex: 3,
+                                                  child: TextFormField(
+                                                    validator: (value) {
+                                                      if (value == null ||
+                                                          value.isEmpty) {
+                                                        return 'this field must be filled!';
+                                                      }
+                                                      return null;
+                                                    },
+                                                    controller: txtReview,
+                                                    decoration:
+                                                        const InputDecoration(
+                                                            hintText:
+                                                                'Your review..'),
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 5,
+                                                ),
+                                                Expanded(
+                                                  flex: 2,
+                                                  child: ElevatedButton(
+                                                    onPressed: () async {
+                                                      final revC = Get.put(
+                                                          ReviewController());
+                                                      final isValidForm =
+                                                          formLogin
+                                                              .currentState!
+                                                              .validate();
+                                                      if (isValidForm) {
+                                                        revC
+                                                            .revResto(
+                                                                dataResto
+                                                                        .restaurant
+                                                                        ?.id ??
+                                                                    '',
+                                                                txtName.text,
+                                                                txtReview.text)
+                                                            .then(
+                                                          (value) {
+                                                            data.searchResto(
+                                                                id);
+                                                            Get.back();
+                                                            Get.snackbar(
+                                                                'Yeay!',
+                                                                'Berhasil mereview restoran!',
+                                                                colorText:
+                                                                    Colors
+                                                                        .white,
+                                                                duration:
+                                                                    const Duration(
+                                                                        seconds:
+                                                                            3),
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .green);
+                                                          },
+                                                          onError: (e) {
+                                                            Get.back();
+                                                            Get.snackbar(
+                                                                'Oops!',
+                                                                'Terjadi Kesalahan!\n$e',
+                                                                colorText:
+                                                                    Colors
+                                                                        .black,
+                                                                duration:
+                                                                    const Duration(
+                                                                        seconds:
+                                                                            3),
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .grey);
+                                                          },
+                                                        );
+                                                      } else {
+                                                        Get.snackbar('Oops!',
+                                                            'Lengkapi form terlebih dahulu!',
                                                             colorText:
                                                                 Colors.white,
                                                             duration:
                                                                 const Duration(
                                                                     seconds: 3),
                                                             backgroundColor:
-                                                                Colors.green);
-                                                      },
-                                                      onError: (e) {
-                                                        Get.back();
-                                                        Get.snackbar('Oops!',
-                                                            'Terjadi Kesalahan!\n$e',
-                                                            colorText:
-                                                                Colors.black,
-                                                            duration:
-                                                                const Duration(
-                                                                    seconds: 3),
-                                                            backgroundColor:
-                                                                Colors.grey);
-                                                      },
-                                                    );
-                                                  } else {
-                                                    Get.snackbar('Oops!',
-                                                        'Lengkapi form terlebih dahulu!',
-                                                        colorText: Colors.white,
-                                                        duration:
-                                                            const Duration(
-                                                                seconds: 3),
-                                                        backgroundColor:
-                                                            Colors.red);
-                                                  }
-                                                },
-                                                child: const Text('Submit'),
-                                              ),
-                                              ElevatedButton(
-                                                onPressed: () {
-                                                  txtName.dispose();
-                                                  txtReview.dispose();
-                                                  Get.back();
-                                                },
-                                                child: const Text('Cancel'),
-                                              ),
-                                            ],
+                                                                Colors.red);
+                                                      }
+                                                    },
+                                                    child: const Text('Submit'),
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 10,
+                                                ),
+                                                Expanded(
+                                                  flex: 2,
+                                                  child: ElevatedButton(
+                                                    onPressed: () {
+                                                      txtName.dispose();
+                                                      txtReview.dispose();
+                                                      Get.back();
+                                                    },
+                                                    child: const Text('Cancel'),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
